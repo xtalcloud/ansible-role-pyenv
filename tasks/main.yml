@@ -1,0 +1,30 @@
+---
+
+ - name: INSTALL PYTHON3 BUILD DEPENDENCIES
+   include_tasks: build_dependencies.yml
+   when: user is not defined
+   tags: system
+
+ - name: SET USER-SPECIFIC FACTS
+   include_tasks: shell_facts.yml
+   when: user is defined
+   tags: user
+
+ - name: ENSURE PYENV IS INSTALLED FOR USER
+   include_tasks: install_pyenv.yml
+   when: user is defined
+   tags: user
+
+ - name: INSTALL PYTHON VIA PYENV FOR USER
+   include_tasks: install_release.yml
+   when: user is defined and install_release is defined
+   tags:
+     - mgmt
+     - user
+
+ - name: SET GLOBAL PYTHON RELEASE FOR USER
+   include_tasks: default_release.yml
+   when: user is defined and default_release is defined
+   tags:
+     - mgmt
+     - user

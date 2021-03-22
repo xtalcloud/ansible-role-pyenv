@@ -1,0 +1,8 @@
+---
+shell_rc_specs:
+  - shell: bash
+    rc_file: ~/.bashrc
+  - shell: zsh
+    rc_file: ~/.zshrc
+  - shell: csh
+    rc_file: ~/.cshrc

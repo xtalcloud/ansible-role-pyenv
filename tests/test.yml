@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - role: kriipke.pyenv
+      vars:
+        user: root
+        install_release: '3.9.0'

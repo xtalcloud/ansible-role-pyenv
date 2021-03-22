@@ -1,0 +1,25 @@
+galaxy_info:
+  author: Spencer Smolen
+  description: Installs pyenv and optionally uses it to build python releases from source for the specified user.
+  company: Xtal Systems
+
+  license: MIT
+
+  min_ansible_version: 2.9
+
+  platforms:
+  - name: EL
+    versions:
+    - 8
+    - 7
+
+  galaxy_tags:
+    - pyenv
+    - python
+    - virtualenv
+    - pip
+    - pipenv
+    - development
+    - environment
+
+dependencies: []

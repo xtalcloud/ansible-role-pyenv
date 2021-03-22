@@ -1,0 +1,18 @@
+---
+- name: set shell-related facts specific to current user
+  block:
+   - name: passwd | pyenv user
+     getent: database=passwd key={{ user }}
+
+   - name: facts | user_shell, user_shell_rc
+     set_fact:
+       user_shell: "{{ getent_passwd[user][5] | basename }}"
+       user_home: "{{ getent_passwd[user][4] }}"
+
+   - name: facts | user_shell_rc
+     set_fact: user_shell_rc={{ item.rc_file }}
+     loop: "{{shell_rc_specs}}"
+     when: (user_shell == item.shell) and
+           (user_shell_rc is not defined)
+  become: yes
+  become_user: "{{ user }}"

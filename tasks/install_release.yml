@@ -1,0 +1,15 @@
+---
+ - block:
+     - name: check installed versions
+       shell: echo ". {{user_shell_rc}}; pyenv versions" | {{user_shell}}
+       register: pyenv_versions
+       changed_when: false
+
+     - include_tasks: build_dependencies.yml
+       when: install_release not in pyenv_versions.stdout
+
+     - name: install specified python release
+       shell: echo ". {{user_shell_rc}}; pyenv install {{ install_release }}" | {{user_shell}}
+       when: install_release not in pyenv_versions.stdout
+   become: yes
+   become_user: "{{ user }}"

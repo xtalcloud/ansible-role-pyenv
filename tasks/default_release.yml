@@ -1,0 +1,25 @@
+---
+- name: get current value for default release
+  shell: echo ". {{user_shell_rc}}; pyenv global" | {{user_shell}}
+  register: pyenv_global
+  become: yes
+  become_user: "{{ user }}"
+  changed_when: false
+
+- block:
+  - name: check installed versions
+    shell: echo ". {{user_shell_rc}}; pyenv versions" | {{user_shell}}
+    register: pyenv_versions
+    changed_when: false
+
+  - name: install python as user via pyenv
+    include_tasks: install_release.yml
+    vars:
+      install_release: "{{ default_release }}"
+    when: default_release not in pyenv_versions.stdout
+
+  - name: set users global python release
+    shell: echo ". {{user_shell_rc}}; pyenv global {{default_release}}" | {{user_shell}}
+  become: yes
+  become_user: "{{ user }}"
+  when: pyenv_global.stdout != default_release

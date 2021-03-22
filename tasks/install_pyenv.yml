@@ -1,0 +1,36 @@
+---
+- name: check if user has pyenv installed
+  stat: path={{ user_home }}/.pyenv/libexec/pyenv
+  register: pyenv_bin
+
+- name: install pyenv as user
+  block:
+    - name: fetch pyenv installer
+      uri: url=https://pyenv.run return_content=true
+      register: pyenv_installer
+    
+    - name: run installer
+      shell: /usr/bin/env bash -c "{{ pyenv_installer.content }}"
+  when: (user is defined) and (not pyenv_bin.stat.exists)
+  become: yes
+  become_user: "{{ user }}"
+  tags: user
+
+- name: add pyenv init lines to shell startup configuration
+  blockinfile:
+    path: "{{ user_shell_rc }}"
+    marker: "# <!-- {mark} ANSIBLE MANAGED BLOCK -->"
+    block: |
+      export PATH="$HOME/.pyenv/bin:$PATH"
+      eval "$(pyenv init -)"
+      eval "$(pyenv virtualenv-init -)"
+  become: yes
+  become_user: "{{ user }}"
+  tags: user
+
+- name: install python as user via pyenv
+  include_tasks: install_release.yml
+  when: install_release is defined
+  tags:
+    - mgmt
+    - user
