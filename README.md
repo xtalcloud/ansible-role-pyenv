@@ -1,5 +1,4 @@
-# Ansible Role: `kriipke.pyenv` 
-Spencer Smolen <spencer@xtal.cloud>
+# Ansible Role: pyenv
 
 ```yaml
 - hosts: localhost
@@ -110,3 +109,11 @@ This is the name of the file that is considered the default rc script path for  
  - `~/.zshrc` for zsh
  - `~/.cshrc` for csh
  - *POSTIX sh does not have a specified init rc file*
+
+## License
+
+MIT / BSD
+
+## Author Information
+
+This role was created  in 2021 by [Spencer Smolen](http://spencersmolen.io) of [Xtal Systems](http://xtal.cloud).
