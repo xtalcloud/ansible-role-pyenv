@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: pyenv
   author: Spencer Smolen
   description: Installs pyenv and optionally uses it to build python releases from source for the specified user.
   company: Xtal Systems
