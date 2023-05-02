@@ -1,12 +1,39 @@
 ---
 - block:
-    - name: pkg | dnf-plugins-core
-      dnf: name=dnf-plugins-core state=latest
+    - name: Determine correct Code Ready Builder repository name
+      set_fact: code_ready_builder="powertools"
+      when:
+        - ansible_fact["distribution"] == "Rocky"
+        - ansible_fact["distribution_major_version"] == 8
+
+    - name: Determine correct Code Ready Builder repository name
+      set_fact: code_ready_builder="crb"
+      when:
+        - ansible_fact["distribution"] == "Rocky"
+        - ansible_fact["distribution_major_version"] == 9
+
+    - name: Determine correct Code Ready Builder repository name
+      set_fact: code_ready_builder="powertools"
+      when:
+        - (ansible_fact["distribution"] == "Rocky") or
+          (ansible_fact["distribution"] == "CentOS") or
+          (ansible_fact["distribution"] == "Almalinux") or
+          
+    - name: get correct Code Ready Builder repository name
+      set_fact: 
+        code_ready_builder: >
+          codeready-builder-for-rhel
+          -{{ ansible_fact["major_release_version"] }}
+          -{{ ansible_fact["architecture"]-rpms"
+      when:
+        - ansible_fact["distribution"] == "RedHat"
 
     - name: pkg | python3 builddeps
-      command: dnf builddep -y python3
-      register: dnf_output
-      changed_when: '"Installing:" in dnf_output.stdout'
+      command: dnf builddep -y --enablerepo={{ code_ready_builder }} python3
+      register: builddep_output
+      changed_when: builddep_output.stdout is not search('Nothing to do.')
+
   become: true
   become_user: root
-  tags: system
+  tags:
+    - system

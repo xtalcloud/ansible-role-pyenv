@@ -3,7 +3,8 @@
  - name: INSTALL PYTHON3 BUILD DEPENDENCIES
    include_tasks: build_dependencies.yml
    when: user is not defined
-   tags: system
+   tags:
+     - system
 
  - name: SET USER-SPECIFIC FACTS
    include_tasks: shell_facts.yml
